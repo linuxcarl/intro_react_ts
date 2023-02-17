@@ -1,10 +1,18 @@
 import React, { ReactNode } from "react";
 
-export class TodoCounter extends React.Component {
+interface properties {
+  total: number;
+  completed: number;
+}
+export class TodoCounter extends React.Component<properties> {
+  constructor(props: properties) {
+    super(props);
+  }
   override render(): ReactNode {
     return (
       <h2>
-        You have <span>2</span> todos
+        You have <span>{this.props.completed}</span> completed of{" "}
+        <span>{this.props.total}</span> todos
       </h2>
     );
   }

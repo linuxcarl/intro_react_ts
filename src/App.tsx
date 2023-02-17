@@ -40,13 +40,30 @@ const todoList = [
 ];
 
 function App() {
+  const [todos] = React.useState<list[]>(todoList); // [state, setState
+  const [searchValue, setSearchValue] = React.useState<string>("");
+  let serachTodos = [];
+  if (!searchValue.length) {
+    serachTodos = todos;
+  } else {
+    serachTodos = todos.filter((todo: list) => {
+      const todoText = todo.task.toLowerCase();
+      const searchText = searchValue.toLowerCase();
+      return todoText.includes(searchText);
+    });
+  }
+  const todoCompleted = serachTodos.filter(
+    (todo: list) => !!todo.completed
+  ).length;
+  const totalTodos = serachTodos.length;
   return (
     <React.Fragment>
-      <TodoCounter />
-      <TodoSearch />
+      <TodoCounter total={totalTodos} completed={todoCompleted} />
+      <TodoSearch searchValue={searchValue} setSearchValue={setSearchValue} />
       <TodoList>
-        {todoList.map((todo: list) => (
+        {serachTodos.map((todo: list) => (
           <TodoItem
+            id={todo.id}
             key={todo.task}
             text={todo.task}
             completed={todo.completed}

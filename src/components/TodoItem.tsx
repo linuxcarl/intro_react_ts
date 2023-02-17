@@ -1,13 +1,24 @@
 import React, { ReactNode } from "react";
 import "./styles/TodoItem.css";
 interface propierties {
+  id: number;
   text: string;
   completed: boolean;
   key?: string;
 }
-export class TodoItem extends React.Component<propierties> {
+interface State {
+  completed: boolean;
+}
+export class TodoItem extends React.Component<propierties, State> {
   constructor(props: propierties) {
     super(props);
+    this.state = {
+      completed: this.props.completed,
+    };
+  }
+  private handleComplete(key: number) {
+    console.log("Complete", key);
+    this.setState({ completed: !this.state.completed });
   }
   override render(): ReactNode {
     return (
@@ -16,6 +27,7 @@ export class TodoItem extends React.Component<propierties> {
           className={`Icon Icon-check ${
             this.props.completed && "Icon-check--active"
           }`}
+          onClick={() => this.handleComplete(this.props.id)}
         >
           √
         </span>
