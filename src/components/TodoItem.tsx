@@ -4,10 +4,14 @@ interface propierties {
   id: number;
   text: string;
   completed: boolean;
+  onCompleted: (id: number) => void;
+  onDeleted: (id: number) => void;
   key?: string;
 }
 interface State {
   completed: boolean;
+  onCompleted?: (id: number) => void;
+  onDeleted?: (id: number) => void;
 }
 export class TodoItem extends React.Component<propierties, State> {
   constructor(props: propierties) {
@@ -27,7 +31,7 @@ export class TodoItem extends React.Component<propierties, State> {
           className={`Icon Icon-check ${
             this.props.completed && "Icon-check--active"
           }`}
-          onClick={() => this.handleComplete(this.props.id)}
+          onClick={() => this.props.onCompleted(this.props.id)}
         >
           √
         </span>
@@ -38,7 +42,12 @@ export class TodoItem extends React.Component<propierties, State> {
         >
           {this.props.text}
         </p>
-        <span className="Icon Icon-delete">X</span>
+        <span
+          className="Icon Icon-delete"
+          onClick={() => this.props.onDeleted(this.props.id)}
+        >
+          X
+        </span>
       </li>
     );
   }

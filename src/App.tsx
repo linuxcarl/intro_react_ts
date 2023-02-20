@@ -40,33 +40,50 @@ const todoList = [
 ];
 
 function App() {
-  const [todos] = React.useState<list[]>(todoList); // [state, setState
+  const [todos, setTodos] = React.useState<list[]>(todoList);
   const [searchValue, setSearchValue] = React.useState<string>("");
-  let serachTodos = [];
+  let searchTodos = [];
   if (!searchValue.length) {
-    serachTodos = todos;
+    searchTodos = todos;
   } else {
-    serachTodos = todos.filter((todo: list) => {
+    searchTodos = todos.filter((todo: list) => {
       const todoText = todo.task.toLowerCase();
       const searchText = searchValue.toLowerCase();
       return todoText.includes(searchText);
     });
   }
-  const todoCompleted = serachTodos.filter(
+  const todoCompleted = searchTodos.filter(
     (todo: list) => !!todo.completed
   ).length;
-  const totalTodos = serachTodos.length;
+  const totalTodos = searchTodos.length;
+  const completedTodos = (id: number) => {
+    const todoIndex = todos.findIndex((todo: list) => todo.id === id);
+    const newTodos = [...todos];
+    newTodos[todoIndex].completed = true;
+    newTodos[todoIndex].completed_date = new Date().toLocaleDateString();
+    setTodos(newTodos);
+  };
+
+  const deleteTodos = (id: number) => {
+    const todoIndex = todos.findIndex((todo: list) => todo.id === id);
+    const newTodos = [...todos];
+    newTodos.splice(todoIndex, 1);
+    setTodos(newTodos);
+  };
+
   return (
     <React.Fragment>
       <TodoCounter total={totalTodos} completed={todoCompleted} />
       <TodoSearch searchValue={searchValue} setSearchValue={setSearchValue} />
       <TodoList>
-        {serachTodos.map((todo: list) => (
+        {searchTodos.map((todo: list) => (
           <TodoItem
             id={todo.id}
             key={todo.task}
             text={todo.task}
             completed={todo.completed}
+            onCompleted={() => completedTodos(todo.id)}
+            onDeleted={() => deleteTodos(todo.id)}
           />
         ))}
       </TodoList>
@@ -74,4 +91,5 @@ function App() {
     </React.Fragment>
   );
 }
+
 export default App;
