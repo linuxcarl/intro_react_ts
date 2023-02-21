@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import "./styles/CreateTodoButton.css";
+import "./CreateTodoButton.css";
 
 export class CreateTodoButton extends React.Component {
   override render(): ReactNode {

@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import "./styles/TodoSearch.css";
+import "./TodoSearch.css";
 
 interface properties {
   searchValue: string;

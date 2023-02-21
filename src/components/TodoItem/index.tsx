@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import "./styles/TodoItem.css";
+import "./TodoItem.css";
 interface propierties {
   id: number;
   text: string;
