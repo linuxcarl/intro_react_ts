@@ -10,7 +10,12 @@ import { Todo } from "./interfaces/Todo.interface";
 export function AppUi(): JSX.Element {
   const [searchValue, setSearchValue] = useState<string>("");
   const key_db = "TODOS_V1";
-  const { item: todos, saveItem: setItem } = useLocalStorage(key_db, []);
+  const {
+    item: todos,
+    saveItem: setItem,
+    loading,
+    error,
+  } = useLocalStorage(key_db, []);
   const completedTodos = (id: number) => {
     const todoIndex = todos.findIndex((todo: Todo) => todo.id === id);
     const newTodos = [...todos];
@@ -39,9 +44,11 @@ export function AppUi(): JSX.Element {
     (todo: Todo) => !!todo.completed
   ).length;
   const totalTodos = searchTodos.length;
-
   return (
     <>
+      {error && <p>Desespérate, hubo un error</p>}
+      {loading && <p>Estamos cargando, no desesperes</p>}
+      {!loading && !searchTodos && <p>Crea tu primer TODO</p>}
       <TodoCounter total={totalTodos} completed={todoCompleted} />
       <TodoSearch searchValue={searchValue} setSearchValue={setSearchValue} />
       <TodoList>
