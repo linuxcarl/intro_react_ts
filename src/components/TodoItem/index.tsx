@@ -4,8 +4,8 @@ interface propierties {
   id: number;
   text: string;
   completed: boolean;
-  onCompleted: (id: number) => void;
-  onDeleted: (id: number) => void;
+  onCompleted?: (id: number) => void;
+  onDeleted?: (id: number) => void;
   key?: string;
 }
 interface State {
@@ -31,7 +31,9 @@ export class TodoItem extends React.Component<propierties, State> {
           className={`Icon Icon-check ${
             this.props.completed && "Icon-check--active"
           }`}
-          onClick={() => this.props.onCompleted(this.props.id)}
+          onClick={() =>
+            this.props.onCompleted && this.props.onCompleted(this.props.id || 0)
+          }
         >
           √
         </span>
@@ -44,7 +46,9 @@ export class TodoItem extends React.Component<propierties, State> {
         </p>
         <span
           className="Icon Icon-delete"
-          onClick={() => this.props.onDeleted(this.props.id)}
+          onClick={() =>
+            this.props.onDeleted && this.props.onDeleted(this.props.id)
+          }
         >
           X
         </span>

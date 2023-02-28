@@ -1,69 +1,45 @@
-import React, { useState } from "react";
-import { useLocalStorage } from "./components/TodoContext/useLocalStorage";
+import React from "react";
 import { TodoCounter } from "./components/TodoCounter";
 import { TodoSearch } from "./components/TodoSearch";
 import { TodoList } from "./components/TodoList";
 import { TodoItem } from "./components/TodoItem";
 import { CreateTodoButton } from "./components/CreateTodoButton";
 import { Todo } from "./interfaces/Todo.interface";
+import { TodoContext } from "./components/TodoContext";
+import { TodoContextProps } from "./components/TodoContext/TodoContent.interface";
 
 export function AppUi(): JSX.Element {
-  const [searchValue, setSearchValue] = useState<string>("");
-  const key_db = "TODOS_V1";
-  const {
-    item: todos,
-    saveItem: setItem,
-    loading,
-    error,
-  } = useLocalStorage(key_db, []);
-  const completedTodos = (id: number) => {
-    const todoIndex = todos.findIndex((todo: Todo) => todo.id === id);
-    const newTodos = [...todos];
-    newTodos[todoIndex].completed = true;
-    newTodos[todoIndex].completed_date = new Date().toLocaleDateString();
-    setItem(newTodos);
-  };
-
-  const deleteTodos = (id: number) => {
-    const todoIndex = todos.findIndex((todo: Todo) => todo.id === id) || 0;
-    const newTodos = [...todos];
-    newTodos.splice(todoIndex, 1);
-    setItem(newTodos);
-  };
-  let searchTodos: Todo[] = [];
-  if (!searchValue.length) {
-    searchTodos = todos;
-  } else {
-    searchTodos = todos.filter((todo: Todo) => {
-      const todoText = todo.task.toLowerCase();
-      const searchText = searchValue.toLowerCase();
-      return todoText.includes(searchText);
-    });
-  }
-  const todoCompleted = searchTodos.filter(
-    (todo: Todo) => !!todo.completed
-  ).length;
-  const totalTodos = searchTodos.length;
   return (
-    <>
-      {error && <p>Desespérate, hubo un error</p>}
-      {loading && <p>Estamos cargando, no desesperes</p>}
-      {!loading && !searchTodos && <p>Crea tu primer TODO</p>}
-      <TodoCounter total={totalTodos} completed={todoCompleted} />
-      <TodoSearch searchValue={searchValue} setSearchValue={setSearchValue} />
-      <TodoList>
-        {searchTodos.map((todo: Todo) => (
-          <TodoItem
-            id={todo.id}
-            key={todo.task}
-            text={todo.task}
-            completed={todo.completed}
-            onCompleted={() => completedTodos(todo.id)}
-            onDeleted={() => deleteTodos(todo.id)}
-          />
-        ))}
-      </TodoList>
+    <React.Fragment>
+      <TodoCounter total={3} completed={40} />
+      <TodoSearch />
+      <TodoContext.Consumer>
+        {({
+          error,
+          loading,
+          searchedTodos,
+          completeTodo,
+          deleteTodo,
+        }: TodoContextProps) => (
+          <TodoList>
+            {error && <p>Desespérate, hubo un error</p>}
+            {loading && <p>Estamos cargando, no desesperes</p>}
+            {!loading && !searchedTodos && <p>Crea tu primer TODO</p>}
+
+            {searchedTodos.map((todo: Todo) => (
+              <TodoItem
+                id={todo.id}
+                key={todo.task}
+                text={todo.task}
+                completed={todo.completed}
+                onCompleted={() => todo.id && completeTodo(todo.id || 0)}
+                onDeleted={() => deleteTodo(todo.id || 0)}
+              />
+            ))}
+          </TodoList>
+        )}
+      </TodoContext.Consumer>
       <CreateTodoButton />
-    </>
+    </React.Fragment>
   );
 }
