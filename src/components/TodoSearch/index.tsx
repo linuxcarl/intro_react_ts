@@ -1,41 +1,53 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, Component } from "react";
+import { TodoContext } from "../TodoContext";
 import "./TodoSearch.css";
 
-interface properties {
+interface TodoSearchProps {
   searchValue?: string;
   setSearchValue?: (value: string) => void;
 }
 
-interface State {
+interface TodoSearchState {
   searchValue: string;
 }
 
-export class TodoSearch extends React.Component<properties, State> {
-  constructor(props: properties) {
+export class TodoSearch extends Component<TodoSearchProps, TodoSearchState> {
+  static contextType = TodoContext;
+  context!: React.ContextType<typeof TodoContext>;
+
+  constructor(props: TodoSearchProps) {
     super(props);
     this.state = {
       searchValue: "",
     };
-    this.handleSearch = this.handleSearch.bind(this);
   }
-  private handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
-    const { value = "" } = event.target;
-    if (value) {
-      this.setState({ searchValue: value });
-      // this.props.setSearchValue(value);
+
+  private onSearchValueChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { setSearchValue } = this.context;
+    if (setSearchValue) {
+      const searchValue = event.target.value;
+
+      console.log(searchValue);
+      setSearchValue(searchValue);
+      this.setState({ searchValue });
     }
-  }
-  override render(): ReactNode {
+  };
+
+  render(): ReactNode {
+    const { searchValue } = this.state;
+
     return (
       <>
         <input
           className="TodoSearch"
           placeholder="Search..."
           type="text"
-          value={this.props.searchValue}
-          onChange={this.handleSearch}
+          value={searchValue}
+          onChange={this.onSearchValueChange}
         />
-        <p>{this.props.searchValue}</p>
+        <p>{searchValue}</p>
       </>
     );
   }
