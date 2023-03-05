@@ -9,36 +9,35 @@ import { TodoContext } from "./components/TodoContext";
 import { TodoContextProps } from "./components/TodoContext/TodoContent.interface";
 
 export function AppUi(): JSX.Element {
+  const {
+    error,
+    loading,
+    searchedTodos,
+    completeTodo,
+    deleteTodo,
+  }: TodoContextProps = React.useContext(TodoContext);
   return (
     <React.Fragment>
-      <TodoCounter total={3} completed={40} />
+      <TodoCounter />
       <TodoSearch />
-      <TodoContext.Consumer>
-        {({
-          error,
-          loading,
-          searchedTodos,
-          completeTodo,
-          deleteTodo,
-        }: TodoContextProps) => (
-          <TodoList>
-            {error && <p>Desespérate, hubo un error</p>}
-            {loading && <p>Estamos cargando, no desesperes</p>}
-            {!loading && !searchedTodos && <p>Crea tu primer TODO</p>}
+      <TodoList>
+        {error && <p>Desespérate, hubo un error</p>}
+        {loading && <p>Estamos cargando, no desesperes</p>}
+        {!loading && !searchedTodos && <p>Crea tu primer TODO</p>}
 
-            {searchedTodos.map((todo: Todo) => (
-              <TodoItem
-                id={todo.id}
-                key={todo.task}
-                text={todo.task}
-                completed={todo.completed}
-                onCompleted={() => todo.id && completeTodo(todo.id || 0)}
-                onDeleted={() => deleteTodo(todo.id || 0)}
-              />
-            ))}
-          </TodoList>
-        )}
-      </TodoContext.Consumer>
+        {searchedTodos.map((todo: Todo) => (
+          <TodoItem
+            id={todo.id}
+            key={todo.task}
+            text={todo.task}
+            completed={todo.completed}
+            onCompleted={() =>
+              todo.id && completeTodo && completeTodo(todo.id || 0)
+            }
+            onDeleted={() => todo.id && deleteTodo && deleteTodo(todo.id || 0)}
+          />
+        ))}
+      </TodoList>
       <CreateTodoButton />
     </React.Fragment>
   );

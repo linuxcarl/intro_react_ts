@@ -1,19 +1,21 @@
 import React, { ReactNode } from "react";
+import { TodoContext } from "../TodoContext";
 import "./TodoCounter.css";
 
-interface properties {
-  total: number;
-  completed: number;
+interface TodoCounterProps {
+  totalTodos: number;
+  completedTodos: number;
 }
-export class TodoCounter extends React.Component<properties> {
-  constructor(props: properties) {
-    super(props);
-  }
+
+export class TodoCounter extends React.Component {
+  static contextType = TodoContext;
+
   override render(): ReactNode {
+    const { totalTodos, completedTodos } = this.context as TodoCounterProps;
     return (
       <h2>
-        You have <span>{this.props.completed}</span> completed of{" "}
-        <span>{this.props.total}</span> todos
+        You have <span>{completedTodos}</span> completed of{" "}
+        <span>{totalTodos}</span> todos
       </h2>
     );
   }
