@@ -12,7 +12,10 @@ const TodoContext = React.createContext<TodoContextProps>({
   setSearchValue: () => {},
   searchedTodos: [],
   completeTodo: () => {},
+  addTodo: () => {},
   deleteTodo: () => {},
+  openModal: false,
+  setOpenModal: () => {},
 });
 interface properties {
   children: React.ReactNode;
@@ -26,6 +29,7 @@ function TodoProvider(props: properties) {
     loading,
     error,
   } = useLocalStorage(key_db, []);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const completeTodo = (id: number) => {
     const todoIndex = todos.findIndex((todo: Todo) => todo.id === id);
     const newTodos = [...todos];
@@ -33,7 +37,16 @@ function TodoProvider(props: properties) {
     newTodos[todoIndex].completed_date = new Date().toLocaleDateString();
     setItem(newTodos);
   };
-
+  const addTodo = (text: string) => {
+    const newTodo = [...todos];
+    newTodo.push({
+      id: Date.now(),
+      task: text,
+      completed: false,
+      completed_date: null,
+    });
+    setItem(newTodo);
+  };
   const deleteTodo = (id: number) => {
     const todoIndex = todos.findIndex((todo: Todo) => todo.id === id) || 0;
     const newTodos = [...todos];
@@ -54,7 +67,6 @@ function TodoProvider(props: properties) {
     (todo: Todo) => !!todo.completed
   ).length;
   const totalTodos = searchedTodos.length;
-  console.log(searchValue);
   return (
     <TodoContext.Provider
       value={{
@@ -65,8 +77,11 @@ function TodoProvider(props: properties) {
         searchValue,
         setSearchValue,
         searchedTodos,
+        addTodo,
         completeTodo,
         deleteTodo,
+        openModal,
+        setOpenModal,
       }}
     >
       {props.children}
