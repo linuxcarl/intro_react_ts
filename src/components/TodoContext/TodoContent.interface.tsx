@@ -8,5 +8,8 @@ export interface TodoContextProps {
   setSearchValue?: (value: string) => void;
   completedTodos: number;
   completeTodo?: (id: number) => void;
+  addTodo?: (text: string) => void;
   deleteTodo?: (id: number) => void;
+  openModal: boolean;
+  setOpenModal?: (value: boolean) => void;
 }

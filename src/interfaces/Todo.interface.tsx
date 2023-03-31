@@ -2,7 +2,7 @@ export interface Todo {
   id: number;
   task: string;
   completed: boolean;
-  completed_date: string;
+  completed_date: string | null;
 }
 
 export interface PropertiesTodos {

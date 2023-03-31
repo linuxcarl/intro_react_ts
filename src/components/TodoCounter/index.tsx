@@ -13,7 +13,7 @@ export class TodoCounter extends React.Component {
   override render(): ReactNode {
     const { totalTodos, completedTodos } = this.context as TodoCounterProps;
     return (
-      <h2>
+      <h2 className="TodoCounter">
         You have <span>{completedTodos}</span> completed of{" "}
         <span>{totalTodos}</span> todos
       </h2>

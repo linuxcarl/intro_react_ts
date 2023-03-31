@@ -47,7 +47,6 @@ export class TodoSearch extends Component<TodoSearchProps, TodoSearchState> {
           value={searchValue}
           onChange={this.onSearchValueChange}
         />
-        <p>{searchValue}</p>
       </>
     );
   }
