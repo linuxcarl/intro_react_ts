@@ -12,7 +12,6 @@ import { Modal } from "./components/Modal";
 import { TodoError } from "./components/TodoError";
 import { TodoLoading } from "./components/TodoLoading";
 import { TodoEmpty } from "./components/TodoEmpty";
-
 export function AppUi(): JSX.Element {
   const {
     error,
